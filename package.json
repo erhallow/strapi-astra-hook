@@ -10,6 +10,7 @@
     "strapi": "strapi"
   },
   "dependencies": {
+    "@astrajs/collections": "^0.0.14",
     "@octokit/rest": "^18.5.3",
     "knex": "0.21.18",
     "sqlite3": "5.0.0",
