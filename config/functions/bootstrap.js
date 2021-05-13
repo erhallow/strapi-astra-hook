@@ -10,4 +10,8 @@
  * See more details here: https://strapi.io/documentation/developer-docs/latest/setup-deployment-guides/configurations.html#bootstrap
  */
 
-module.exports = () => {};
+console.log('test')
+
+module.exports = async () => {
+    const data = await strapi.services.astra.hello();
+}
