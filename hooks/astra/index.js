@@ -17,18 +17,21 @@ module.exports = strapi => {
           astraDatabaseRegion: databaseRegion,
           applicationToken: token,
         });
-        strapi.services.astra = () => {
+        strapi.services.astra = async () => {
           return {
-            getById: (collection, id) => {
+            hello: async () => {
+              console.log('Hello world...');
+            },
+            getById: async (collection, id) => {
              // TODO: Eric TODO
             },
-            getByPath: (collection, path) => {
+            getByPath: async (collection, path) => {
               // TODO: Eric TODO
             },
-            searchCollection: (collection, query) => {
+            searchCollection: async (collection, query) => {
               // TODO: Eric TODO
             },
-            create: (collection, document) => {
+            create: async (collection, document) => {
               // TODO: Eric TODO
             },
           }
