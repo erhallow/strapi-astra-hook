@@ -1,26 +1,36 @@
-
+// See the full documentation on @astrajs/collections here:
+// https://docs.datastax.com/en/astra/docs/astra-collection-client.html
+const { createClient } = require("@astrajs/collections");
 
 module.exports = strapi => {
     return {
       async initialize() {
-        const { createClient } = require("@astrajs/collections");
+        const {
+          token,
+          databaseId,
+          databaseRegion,
+          namespace,
+        } = strapi.config.get('hook.settings.astra');
+
         const astraClient = await createClient({
-          astraDatabaseId: process.env.ASTRA_DB_ID,
-          astraDatabaseRegion: process.env.ASTRA_DB_REGION,
-          applicationToken: process.env.ASTRA_DB_APPLICATION_TOKEN,
+          astraDatabaseId: databaseId,
+          astraDatabaseRegion: databaseRegion,
+          applicationToken: token,
         });
-        console.log('my hook is loaded');
         strapi.services.astra = () => {
           return {
-            hello: () => {
-              return 'hello world';
+            getById: (collection, id) => {
+             // TODO: Eric TODO
             },
-            get: () => {
-             // TODO
+            getByPath: (collection, path) => {
+              // TODO: Eric TODO
             },
-            create: () => {
-              // TODO
-            }
+            searchCollection: (collection, query) => {
+              // TODO: Eric TODO
+            },
+            create: (collection, document) => {
+              // TODO: Eric TODO
+            },
           }
         }
       },
