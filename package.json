@@ -12,8 +12,10 @@
   "dependencies": {
     "@astrajs/collections": "^0.0.14",
     "@octokit/rest": "^18.5.3",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "knex": "0.21.18",
+    "request": "^2.81.0",
     "sqlite3": "5.0.0",
     "strapi": "3.6.1",
     "strapi-admin": "3.6.1",
