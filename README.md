@@ -2,12 +2,12 @@
 
 A quick description of your strapi application
 
-**Dependencies**
+## Dependencies
 
 npm i
 
 
-**Run**
+## Run
 
 npm run develop
 npm run start
