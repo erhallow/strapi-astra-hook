@@ -1,3 +1,8 @@
+//This is a strapi hook used to import all the necessary
+//tokens,keyspaces or any variables required for the url 
+//which is defined in the .env file
+
+
 module.exports = {
     settings: {
       astra: {
@@ -6,7 +11,6 @@ module.exports = {
         databaseId: process.env.ASTRA_DB_ID,
         databaseRegion: process.env.ASTRA_DB_REGION,
         astraKeyspace: process.env.ASTRA_DB_KEYSPACE,
-        // namespace: process.env.ASTRA_DB_NAMESPACE,
       },
     },
   };

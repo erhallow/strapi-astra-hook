@@ -1,132 +1,112 @@
+//This is the main javascript which will help you 
+//execute get/post/put/delete queries to Astra Cassandra database
+
 
 const request = require('request');
-var document_id = '';
-
-
-
 
 module.exports = strapi => {
-    return {
-      async initialize() {
-        const {
-          token,
-          databaseId,
-          databaseRegion,
-          astraKeyspace,
-        } = strapi.config.get('hook.settings.astra');
+		return {
+			async initialize() {
+				const {
+					token,
+					databaseId,
+					databaseRegion,
+					astraKeyspace,
+				} = strapi.config.get('hook.settings.astra');
 
-          var headers = {
-                'X-Cassandra-Token': token,
-                'Content-Type': 'application/json'
-          };
+				var headers = {
+								'X-Cassandra-Token': token,
+								'Content-Type': 'application/json'
+					};
 
-        strapi.services.astra = {
+				var url_ini = 'https://' + databaseId+ '-' +databaseRegion+'.apps.astra.datastax.com/api/rest/v2/namespaces/' +astraKeyspace + '/collections/';
 
-           //check function 
-          hello: () => {
-            console.log('Hello world...');
-          },
+				strapi.services.astra = {
 
+					//creating the document
+					create: async () => {
 
-          //creating the document
+						//This is the sample document data 
+						var dataString = '{ "name": "John", "last_name": "Doe" }';
 
-          create: async (collection, document) => {
-            // TODO: Eric TODO
+						//This is the sample collection name
+						var collection_name = 'employee_detail';
 
+						var options = {
+								url: url_ini + collection_name,
+								method: 'POST',
+								headers: headers,
+								body: dataString
+						};
 
-            var dataString = '{ "title": "check_2", "other": "check_2" }';
-
-            var options = {
-                url: 'https://' + databaseId+ '-' +databaseRegion+'.apps.astra.datastax.com/api/rest/v2/namespaces/' +astraKeyspace + '/collections/check_2',
-                method: 'POST',
-                headers: headers,
-                body: dataString
-            };
-
-            request(options, function(err, res, body) {
-                    document_id = JSON.parse(body);
-                    console.log(document_id);
-                  });
-          },
+						request(options, function(err, res, body) {
+										document_id = JSON.parse(body);
+										console.log(document_id);
+									});
+					},
 
 
-          //getting the document via document id
-          getById: async (collection, id) => {
+					//Getting the document data using document id
+					getById: async () => {
 
-           // TODO: Eric TODO
-            // var headers = {
-            //     'X-Cassandra-Token': token,
-            //     'Content-Type': 'application/json'
-            // };
+						var collection_name = 'employee_detail';
 
-            //var dataString = '{ "title": "Some Stuff", "other": "This is nonsensical stuff." }';
+						//This is the sample document id
+						var document_id = 'ce7f5f87-225e-41f2-8816-77b4df8d61d1';
 
-            var options = {
-                url: 'https://' + databaseId+ '-' +databaseRegion+'.apps.astra.datastax.com/api/rest/v2/namespaces/' +astraKeyspace + '/collections/check_2/' +document_id,
-                method: 'GET',
-                headers: headers,
-            };
-           // console.log(document_id + 'Hi');
-            request(options, function(err, res, body) {
-                    let json = JSON.parse(body);
-                    console.log("Hi from getById");
-                    console.log(json);
-                  });
-            },
+						var options = {
+								url: url_ini + collection_name + '/' + document_id ,
+								method: 'GET',
+								headers: headers,
+						};
+						request(options, function(err, res, body) {
+										let json = JSON.parse(body);
+										console.log(json);
+									});
+						},
 
 
-          
-          //getting the document via document path
-          getByPath: async (collection, path) => {
+					
+					//Getting the document via document path and returns the most recent entry of data in that specific document
+					getByPath: async () => {
 
-            // var headers = {
-            //     'X-Cassandra-Token': token,
-            //     'Content-Type': 'application/json'
-            // };
+						var collection_name = 'employee_detail';
 
-            //var dataString = '{ "title": "Some Stuff", "other": "This is nonsensical stuff." }';
+						var options = {
+								url: url_ini + collection_name,
+								method: 'GET',
+								headers: headers,
+						};
 
-            var options = {
-                url: 'https://' + databaseId+ '-' +databaseRegion+'.apps.astra.datastax.com/api/rest/v2/namespaces/' +astraKeyspace + '/collections/check_1',
-                method: 'GET',
-                headers: headers,
-            };
-
-            request(options, function(err, res, body) {
-                    let json = JSON.parse(body);
-                    console.log("Hi from getByPath");
-                    console.log(json);
-                  });
-            // TODO: Eric TODO
-          },
+						request(options, function(err, res, body) {
+										let json = JSON.parse(body);
+										console.log(json);
+									});
+						},
 
 
-          //searching the document via document name
-          searchCollection: async (collection, query) => {
-            // TODO: Eric TODO
+					//searching the document via document name
+					searchCollection: async () => {
 
-            // var headers = {
-            //     'X-Cassandra-Token': token,
-            //     'Content-Type': 'application/json'
-            // };
+							var collection_name = 'employee_detail';
+							// This is the sample query for our document
+							var query = {
+													"name": { "$eq": "John" }
+									}
 
-            //var dataString = '{ "title": "Some Stuff", "other": "This is nonsensical stuff." }';
+						var options = {
+								url: url_ini+collection_name+'?where='+JSON.stringify(query)+'&page-size=3',
+								method: 'GET',
+								headers: headers,
+						};
 
-            var options = {
-                url: 'https://' + databaseId+ '-' +databaseRegion+'.apps.astra.datastax.com/api/rest/v2/namespaces/' +astraKeyspace + '/collections?name=check_2',
-                method: 'GET',
-                headers: headers,
-            };
+						request(options, function(err, res, body) {
+										let json = JSON.parse(body);
+										console.log(json);
+									});
+						},
 
-            request(options, function(err, res, body) {
-              console.log(res); 
-                    let json = JSON.parse(body);
-                    console.log("Hi from searchCollection");
-                    console.log(json);
-                  });
-          },
-
-        }
-      },
-    };
-  };
+				}
+			},
+		};
+	};
