@@ -1,6 +1,5 @@
 # Strapi application
 
-A quick description of your strapi application
 
 ## Create a .env file
 
