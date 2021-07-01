@@ -8,6 +8,7 @@ Store following variables in the file
 2) ASTRA_DB_ID
 3) ASTRA_DB_REGION
 4) ASTRA_DB_KEYSPACE
+5) ASTRA_COLLECTION
 
 ## Dependencies
 

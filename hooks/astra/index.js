@@ -1,5 +1,5 @@
-//This is the main javascript which will help you
-//execute get/post/put/delete queries to Astra Cassandra database
+// This is the main javascript which will help you
+// execute get/post/put/delete queries to Astra Cassandra database
 
 const request = require('request');
 
@@ -10,100 +10,70 @@ module.exports = strapi => {
         token,
         databaseId,
         databaseRegion,
-        astraKeyspace,
+        keyspace,
+        collection
       } = strapi.config.get('hook.settings.astra');
 
-      var headers = {
+      const headers = {
         'X-Cassandra-Token': token,
         'Content-Type': 'application/json'
       };
 
-      var url_ini = 'https://' + databaseId + '-' + databaseRegion + '.apps.astra.datastax.com/api/rest/v2/namespaces/' + astraKeyspace + '/collections/';
+      const url_ini = `https://${databaseId}-${databaseRegion}.apps.astra.datastax.com/api/rest/v2/namespaces/${keyspace}/collections/`;
 
       strapi.services.astra = {
 
-        //creating the document
-        create: async () => {
-
-          //This is the sample document data
-          var dataString = '{ "name": "John", "last_name": "Doe" }';
-
-          //This is the sample collection name
-          var collection_name = 'employee_detail';
-
-          var options = {
-            url: url_ini + collection_name,
+        // creating the document
+        create: async (document) => {
+          const options = {
+            url: url_ini + collection,
             method: 'POST',
             headers: headers,
-            body: dataString
+            body: document
           };
-
           request(options, function (err, res, body) {
-            document_id = JSON.parse(body);
-            console.log(document_id);
+            return JSON.parse(body);
           });
         },
 
 
-        //Getting the document data using document id
-        getById: async () => {
-
-          var collection_name = 'employee_detail';
-
-          //This is the sample document id
-          var document_id = 'ce7f5f87-225e-41f2-8816-77b4df8d61d1';
-
-          var options = {
-            url: url_ini + collection_name + '/' + document_id,
+        // Getting the document data using document id
+        getById: async (documentId) => {
+          const options = {
+            url: url_ini + collection + '/' + documentId,
             method: 'GET',
             headers: headers,
           };
           request(options, function (err, res, body) {
-            let json = JSON.parse(body);
-            console.log(json);
+            return JSON.parse(body);
           });
         },
 
-
-        //Getting the document via document path and returns the most recent entry of data in that specific document
+        // Getting the document via document path and returns the most recent entry of data in that specific document
         getByPath: async () => {
-
-          var collection_name = 'employee_detail';
-
-          var options = {
-            url: url_ini + collection_name,
+          const options = {
+            url: url_ini + collection,
             method: 'GET',
             headers: headers,
           };
 
           request(options, function (err, res, body) {
-            let json = JSON.parse(body);
-            console.log(json);
+            return JSON.parse(body);
           });
         },
 
-
-        //searching the document via document name
-        searchCollection: async () => {
-
-          var collection_name = 'employee_detail';
-          // This is the sample query for our document
-          var query = {
-            "name": {"$eq": "John"}
-          }
-
-          var options = {
-            url: url_ini + collection_name + '?where=' + JSON.stringify(query) + '&page-size=3',
+        // searching the document via document name
+        searchCollection: async (query) => {
+          const options = {
+            url: url_ini + collection + '?where=' + JSON.stringify(query) + '&page-size=3',
             method: 'GET',
             headers: headers,
           };
 
           request(options, function (err, res, body) {
-            let json = JSON.parse(body);
-            console.log(json);
+            return JSON.parse(body);
           });
         },
-
       }
     },
   };
